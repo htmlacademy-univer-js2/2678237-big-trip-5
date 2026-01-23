@@ -1,13 +1,14 @@
-import EventsListView from '../view/eventsListView';
+import ListView from '../view/listView';
 import {render} from '../render';
+import ItemListView from '../view/itemListView';
 import FormEditingView from '../view/formEditingView';
-import EventView from '../view/eventView';
-import FormCreationView from '../view/formCreationView';
-import SortingView from '../view/sortingView';
 import FiltersView from '../view/filtersView';
+import SortingView from '../view/sortingView';
+import FormCreationView from '../view/formCreationView';
+import EventView from '../view/eventView';
 
 export default class Presenter {
-  eventList = new EventsListView();
+  eventList = new ListView();
 
   constructor({tripEvents, filters}) {
     this.tripEvents = tripEvents;
@@ -15,15 +16,22 @@ export default class Presenter {
   }
 
   init() {
+    const editItemList = new ItemListView();
+    const addItemList = new ItemListView();
+    editItemList.getElement().appendChild(new FormEditingView().getElement());
+    addItemList.getElement().appendChild(new FormCreationView().getElement());
+
     render(new FiltersView(), this.filters);
-    render(new SortingView(), this.eventList.getElement());
-    render(new FormEditingView(), this.eventList.getElement());
+    render(new SortingView(), this.tripEvents);
     render(this.eventList, this.tripEvents);
+    render(editItemList, this.eventList.getElement());
 
     for (let i = 0; i < 3; i++) {
-      render(new EventView(), this.eventList.getElement());
+      const itemList = new ItemListView();
+      itemList.getElement().appendChild(new EventView().getElement());
+      render(itemList, this.eventList.getElement());
     }
 
-    render(new FormCreationView(), this.tripEvents);
+    render(addItemList, this.eventList.getElement());
   }
 }

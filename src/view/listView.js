@@ -6,7 +6,7 @@ function createEventsListTemplate() {
   `;
 }
 
-export default class EventsListView {
+export default class ListView {
   getTemplate() {
     return createEventsListTemplate();
   }
