@@ -1,6 +1,6 @@
 import { createElement } from '../render';
 import { formatForInput } from '../utils/dateUtils';
-import {byChecked} from "../utils/utils";
+import {byChecked} from '../utils/utils';
 
 function createDestinationTemplate(destinations) {
   return destinations
