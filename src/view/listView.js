@@ -7,18 +7,20 @@ function createEventsListTemplate() {
 }
 
 export default class ListView {
+  #element = null;
+
   getTemplate() {
     return createEventsListTemplate();
   }
 
   getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+    if (!this.#element) {
+      this.#element = createElement(this.getTemplate());
     }
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }
