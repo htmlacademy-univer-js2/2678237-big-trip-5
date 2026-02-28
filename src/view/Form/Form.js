@@ -17,7 +17,7 @@ export default class Form extends AbstractStatefulView {
 
   constructor({point, destinations, offers, onSubmitForm, onDelete, onCloseForm}) {
     super();
-    this._setState(point);
+    this._setState({...point, currentOffers: point.offers, currentType: point.type});
     this.#destinations = destinations;
     this.#offers = offers;
     this.#handleSubmitForm = onSubmitForm;
@@ -116,6 +116,10 @@ export default class Form extends AbstractStatefulView {
 
   #submitHandleClick = (evt) => {
     evt.preventDefault();
+
+    delete this._state.currentType;
+    delete this._state.currentOffers;
+
     this.#handleSubmitForm(this._state);
   };
 
@@ -132,7 +136,16 @@ export default class Form extends AbstractStatefulView {
   #handleTypeChange = (evt) => {
     if (evt.target.name === 'event-type') {
       const newType = evt.target.value;
-      this.updateElement({ type: newType });
+      let isSourceType = false;
+
+      if (newType === this._state.currentType) {
+        isSourceType = true;
+      }
+
+      this.updateElement({
+        offers: isSourceType ? this._state.currentOffers : [],
+        type: newType
+      });
     }
   };
 

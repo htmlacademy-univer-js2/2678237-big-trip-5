@@ -134,7 +134,7 @@ export function createFormTemplate({
     dateTo = null,
     destination: destId = null,
     offers: selectedOfferIds = [],
-    type = null,
+    type = 'Flight',
     isSaving,
     isDeleting,
     isDisabled,

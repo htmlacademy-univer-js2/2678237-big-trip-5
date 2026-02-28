@@ -5,11 +5,13 @@ import BoardPresenter from '@presenter/boardPresenter';
 import FilterModel from '@model/filterModel';
 import FilterPresenter from '@presenter/filterPresenter';
 import TripApiService from '@service/tripApiService';
+import TripInfoPresenter from '@presenter/tripInfoPresenter';
 
 const API_SERVICE = 'https://24.objects.htmlacademy.pro/big-trip';
 const TOKEN = 'Basic dm0v143op22002d';
 
 const boardContainer = document.querySelector('.trip-events');
+const infoContainer = document.querySelector('.trip-main');
 const filterContainer = document.querySelector('.trip-controls__filters');
 const pointAddButton = document.querySelector('.trip-main__event-add-btn');
 pointAddButton.disabled = true;
@@ -20,6 +22,13 @@ const destinationsModel = new DestinationsModel(service);
 const offersModel = new OffersModel(service);
 const pointsModel = new PointsModel(service);
 const filterModel = new FilterModel();
+
+const tripInfoPresenter = new TripInfoPresenter({
+  infoContainer,
+  pointsModel,
+  destinationsModel,
+  offersModel
+});
 
 const filterPresenter = new FilterPresenter({
   filterContainer,
@@ -55,6 +64,7 @@ Promise.all([
   offersModel.init(),
   pointsModel.init()
 ]).then(() => {
+  tripInfoPresenter.init();
   pointAddButton.disabled = false;
 }).catch(() => {
   pointAddButton.disabled = true;

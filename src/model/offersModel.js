@@ -24,4 +24,12 @@ export default class OffersModel extends Observable {
   get offers() {
     return this.#offers;
   }
+
+  getByPoint(point) {
+    const currentTypeOffer = this.#offers.find((offer) => offer.type === point.type);
+    if (!currentTypeOffer) {
+      return [];
+    }
+    return currentTypeOffer.offers.filter((offer) => point.offers.includes(offer.id));
+  }
 }

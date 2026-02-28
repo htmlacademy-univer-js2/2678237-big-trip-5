@@ -31,11 +31,8 @@ export default class NewPointPresenter {
       return;
     }
 
-    const availableTypes = this.#offersModel.offers;
-    const defaultType = availableTypes.length > 0 ? availableTypes[0].type : '';
-
     this.#pointEditComponent = new Form({
-      point: {...BLANK_POINT, type: defaultType},
+      point: {...BLANK_POINT, type: 'flight'},
       destinations: this.#destinationsModel.destinations,
       offers: this.#offersModel.offers,
       onSubmitForm: this.#handleSubmitForm,
@@ -43,7 +40,7 @@ export default class NewPointPresenter {
     });
 
     appendElement(this.#itemListComponent, this.#pointEditComponent);
-    render(this.#pointEditComponent, this.#pointListContainer, RenderPosition.AFTERBEGIN);
+    render(this.#itemListComponent, this.#pointListContainer, RenderPosition.AFTERBEGIN);
 
     this.#stateManager.openPresenter(this);
     document.addEventListener('keydown', this.#escKeyDownHandler);
@@ -81,6 +78,10 @@ export default class NewPointPresenter {
 
     this.#stateManager.closePresenter();
     document.removeEventListener('keydown', this.#escKeyDownHandler);
+  }
+
+  resetToView() {
+    this.destroy();
   }
 
   #handleSubmitForm = (point) => {

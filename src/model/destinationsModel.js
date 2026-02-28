@@ -24,4 +24,8 @@ export default class DestinationsModel extends Observable {
   get destinations() {
     return this.#destinations;
   }
+
+  getById(id) {
+    return this.#destinations.find((destination) => destination.id === id) || null;
+  }
 }

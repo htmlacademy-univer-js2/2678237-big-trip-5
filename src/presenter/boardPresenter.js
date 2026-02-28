@@ -1,5 +1,5 @@
 import {generateSorts} from '@utils/sortUtils';
-import {remove, render} from '@framework/render';
+import {remove, render, RenderPosition} from '@framework/render';
 import {
   filterByType,
   FilterType,
@@ -25,7 +25,9 @@ export default class BoardPresenter {
   #pointListComponent = new List();
   #messageComponent = null;
   #sortComponent = null;
+
   #newAddPointPresenter = null;
+  #destroyNewPoint = null;
 
   #uiBlocker = new UiBlocker({
     lowerLimit: TIME_LIMIT.LOWER_LIMIT,
@@ -55,13 +57,15 @@ export default class BoardPresenter {
     this.#offersModel = offersModel;
     this.#filterModel = filterModel;
 
+    this.#destroyNewPoint = onNewPointDestroy;
+
     this.#newAddPointPresenter = new NewPointPresenter({
       pointListContainer: this.#pointListComponent.element,
       destinationsModel: this.#destinationsModel,
       offersModel: this.#offersModel,
       stateManager: this.#pointManagerState,
       onDataChange: this.#handleViewAction,
-      onDestroy: onNewPointDestroy
+      onDestroy: this.#cancelNewPoint
     });
 
     this.#pointsModel.addObserver(this.#handleModeEvent);
@@ -85,7 +89,18 @@ export default class BoardPresenter {
   createNewPoint() {
     this.#newAddPointPresenter.init();
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+
+    if (this.#messageComponent) {
+      remove(this.#messageComponent);
+    }
   }
+
+  #cancelNewPoint = () => {
+    this.#destroyNewPoint();
+    if (this.points.length === 0) {
+      this.#renderBoard();
+    }
+  };
 
   #handleViewAction = async (actionType, updateType, data) => {
     this.#uiBlocker.block();
@@ -206,7 +221,7 @@ export default class BoardPresenter {
       onChangeSortType: this.#handleSortTypeChange
     });
 
-    render(this.#sortComponent, this.#boardContainer);
+    render(this.#sortComponent, this.#boardContainer, RenderPosition.AFTERBEGIN);
   }
 
   #handleSortTypeChange = (typeSort) => {
@@ -242,6 +257,8 @@ export default class BoardPresenter {
       return;
     }
 
+    this.#renderPointList(points);
+
     if (points.length === 0) {
       const currentFilterKey = this.#filterType.toUpperCase();
       this.#renderMessage(MessagesBoard[currentFilterKey]);
@@ -249,6 +266,5 @@ export default class BoardPresenter {
     }
 
     this.#renderSort();
-    this.#renderPointList(points);
   }
 }

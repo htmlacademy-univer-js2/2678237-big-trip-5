@@ -95,7 +95,7 @@ export default class PointPresenter {
 
   setAborting() {
     if (this.#mode === Mode.DEFAULT) {
-      this.#pointComponent.shake();
+      this.#itemListComponent.shake();
       return;
     }
 
@@ -155,7 +155,7 @@ export default class PointPresenter {
   #handleSubmitForm = (point) => {
     this.#handleDataChange(
       UserAction.UPDATE_POINT,
-      UpdateType.PATCH,
+      UpdateType.MINOR,
       point
     );
   };
